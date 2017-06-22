@@ -1,0 +1,415 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using ConsoleApp;
+
+namespace WindowsFormsAppClima
+{
+
+    public partial class Form1 : Form, NoticiaClima
+    {
+        
+        public Form1()
+        {
+            InitializeComponent();
+            navegador.Navigate(textBox1.Text);
+            navegador2.Navigate(textBox2.Text);
+            navegador3.Navigate(textBox3.Text);
+            pegarHora();
+            pegarLocal();
+        }
+
+        WebBrowser navegador = new WebBrowser();
+        WebBrowser navegador2 = new WebBrowser();
+        WebBrowser navegador3 = new WebBrowser();
+        WebBrowser navegador4 = new WebBrowser();
+
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            navegador.ScriptErrorsSuppressed = true;
+            navegador.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(this.dados_carregados1);
+            navegador.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(this.dados_carregados2);
+            navegador2.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(this.dados_carregados3);
+            navegador2.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(this.dados_carregados4);
+            navegador3.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(this.dados_carregados5);
+            navegador3.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(this.dados_carregados6);
+            pegarHora();
+            pegarLocal();
+        }
+
+
+
+
+        private void dados_carregados1(object sender, EventArgs e)
+        {
+            //textBox2.Text = navegador.Document.GetElementById("main-wrapper").InnerText;
+
+            int indiceManchete1 = 0;
+            foreach (HtmlElement tag in navegador.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("titletext") && indiceManchete1 == 0)   //pegar a manchete
+                {
+                    manchete1.Text = tag.InnerText;
+                    indiceManchete1 += 1;
+                }
+            }
+            int indiceHora1 = 0;
+            foreach (HtmlElement tag in navegador.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("al-attribution-timestamp") && indiceHora1 == 0)   //pegar a hora de publicação
+                {
+                    hora1.Text = tag.InnerText;
+                    indiceHora1 += 1;
+                }
+            }
+            int indiceFonte1 = 0;
+            foreach (HtmlElement tag in navegador.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("al-attribution-source") && indiceFonte1 == 0)   //pegar a fonte
+                {
+                    fonte1.Text = tag.InnerText;
+                    indiceFonte1 += 1;
+                }
+            }
+            foreach (HtmlElement tag in navegador.Document.GetElementsByTagName("img"))
+            {
+                if (tag.GetAttribute("alt").Contains(""))  
+                {
+                    imagem1.ImageLocation = tag.GetAttribute("src");
+                }
+            }
+            
+        }
+
+       private void dados_carregados2(object sender, EventArgs e)
+        {
+           
+            foreach (HtmlElement tag in navegador.Document.All)              
+            {
+                if (tag.GetAttribute("classname").Contains("titletext"))   //pegar a manchete
+                {                
+                        manchete2.Text = tag.InnerText;               
+                }
+            }
+
+            foreach (HtmlElement tag in navegador.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("al-attribution-timestamp"))   //pegar a hora de publicação
+                {
+                    hora2.Text = tag.InnerText;
+                }
+            }
+
+            foreach (HtmlElement tag in navegador.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("al-attribution-source"))   //pegar a fonte
+                {
+                    fonte2.Text = tag.InnerText;
+                }
+            }
+           
+        }
+
+        private void dados_carregados3(object sender, EventArgs e)
+        {
+
+            int indiceManchete3 = 0;
+            foreach (HtmlElement tag in navegador2.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("titletext") && indiceManchete3 == 0)   //pegar a manchete
+                {
+                    manchete3.Text = tag.InnerText;
+                    indiceManchete3 += 1;
+                }
+            }
+
+            int indiceHora3 = 0;
+            foreach (HtmlElement tag in navegador2.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("al-attribution-timestamp") && indiceHora3 == 0)   //pegar a hora de publicação
+                {
+                    hora3.Text = tag.InnerText;
+                    indiceHora3 += 1;
+                }
+            }
+
+            int indiceFonte3 = 0;
+            foreach (HtmlElement tag in navegador2.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("al-attribution-source") && indiceFonte3 == 0)   //pegar a fonte
+                {
+                    fonte3.Text = tag.InnerText;
+                    indiceFonte3 += 1;
+                }
+            }
+
+            foreach (HtmlElement tag in navegador2.Document.GetElementsByTagName("img"))
+            {
+                if (tag.GetAttribute("alt").Contains(""))
+                {
+                    imagem3.ImageLocation = tag.GetAttribute("src");
+                }
+            }
+        }
+
+        private void dados_carregados4(object sender, EventArgs e)
+        {
+            foreach (HtmlElement tag in navegador2.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("titletext"))   //pegar a manchete
+                {
+                    manchete4.Text = tag.InnerText;
+                }
+            }
+
+            foreach (HtmlElement tag in navegador2.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("al-attribution-timestamp"))   //pegar a hora de publicação
+                {
+                    hora4.Text = tag.InnerText;
+                }
+            }
+
+            foreach (HtmlElement tag in navegador2.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("al-attribution-source"))   //pegar a fonte
+                {
+                    fonte4.Text = tag.InnerText;
+
+                }
+            }
+
+        }
+
+        private void dados_carregados5(object sender, EventArgs e)
+        {
+            int indiceManchete5 = 0;
+            foreach (HtmlElement tag in navegador3.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("titletext") && indiceManchete5 == 0)   //pegar a manchete
+                {
+                    manchete5.Text = tag.InnerText;
+                    indiceManchete5 += 1;
+                }
+            }
+
+            int indiceHora5 = 0;
+            foreach (HtmlElement tag in navegador3.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("al-attribution-timestamp") && indiceHora5 == 0)   //pegar a hora de publicação
+                {
+                    hora5.Text = tag.InnerText;
+                    indiceHora5 += 1;
+                }
+            }
+
+            int indiceFonte5 = 0;
+            foreach (HtmlElement tag in navegador3.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("al-attribution-source") && indiceFonte5 == 0)   //pegar a fonte
+                {
+                    fonte5.Text = tag.InnerText;
+                    indiceFonte5 += 1;
+                }
+            }
+
+            foreach (HtmlElement tag in navegador3.Document.GetElementsByTagName("img"))
+            {
+                if (tag.GetAttribute("alt").Contains(""))
+                {
+                    imagem5.ImageLocation = tag.GetAttribute("src");
+                }
+            }
+        }
+
+        private void dados_carregados6(object sender, EventArgs e)
+        {
+            foreach (HtmlElement tag in navegador3.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("titletext"))   //pegar a manchete
+                {
+                      manchete6.Text = tag.InnerText;
+                }
+            }
+
+            foreach (HtmlElement tag in navegador3.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("al-attribution-timestamp"))   //pegar a hora de publicação
+                {
+                    hora6.Text = tag.InnerText;
+                }
+            }
+
+            foreach (HtmlElement tag in navegador3.Document.All)
+            {
+                if (tag.GetAttribute("classname").Contains("al-attribution-source"))   //pegar a fonte
+                {
+                    fonte6.Text = tag.InnerText;
+                }
+            }
+            
+        }
+            public string link;
+            public void manchete1_Click(object sender, EventArgs e)
+            {
+            foreach (HtmlElement tag in navegador.Document.All)
+            {
+                if (tag.GetAttribute("id").Contains("MAA4AEgAUABgAWoIcHQtQlJfYnJ6AXc"))   
+                {
+                    link = tag.GetAttribute("url");
+                    
+                }
+            }
+                    Form2 f = new Form2(link);
+                    f.Show();
+            }
+
+        
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void fonte4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void manchete2_Click(object sender, EventArgs e)
+        {
+            foreach (HtmlElement tag in navegador.Document.All)
+            {
+                if (tag.GetAttribute("id").Contains("MAA4AEgTUABgAWoIcHQtQlJfYnJ6AXc"))   
+                {
+                    link = tag.GetAttribute("url");
+
+                }
+            }
+            Form2 f = new Form2(link);
+            f.Show();
+        }
+
+        private void manchete3_Click(object sender, EventArgs e)
+        {
+
+            foreach (HtmlElement tag in navegador2.Document.All)
+            {
+                if (tag.GetAttribute("id").Contains("MAA4AEgAUABgAWoIcHQtQlJfYnJ6AXQ"))   
+                {
+                    link = tag.GetAttribute("url");
+
+                }
+            }
+            Form2 f = new Form2(link);
+            f.Show();
+        }
+
+        private void manchete4_Click(object sender, EventArgs e)
+        {
+            foreach (HtmlElement tag in navegador2.Document.All)
+            {
+                if (tag.GetAttribute("id").Contains("MAA4AEgTUABgAWoIcHQtQlJfYnJ6AXQ"))   
+                {
+                    link = tag.GetAttribute("url");
+
+                }
+            }
+            Form2 f = new Form2(link);
+            f.Show();
+        }
+
+        private void manchete5_Click(object sender, EventArgs e)
+        {
+            foreach (HtmlElement tag in navegador3.Document.All)
+            {
+                if (tag.GetAttribute("id").Contains("MAA4AEgAUABgAWoIcHQtQlJfYnJ6AW4"))   
+                {
+                    link = tag.GetAttribute("url");
+
+                }
+            }
+            Form2 f = new Form2(link);
+            f.Show();
+        }
+
+        private void manchete6_Click(object sender, EventArgs e)
+        {
+            foreach (HtmlElement tag in navegador3.Document.All)
+            {
+                if (tag.GetAttribute("id").Contains("MAA4AEgTUABgAWoIcHQtQlJfYnJ6AW4"))   
+                {
+                    link = tag.GetAttribute("url");
+
+                }
+            }
+            Form2 f = new Form2(link);
+            f.Show();
+        }
+
+            public string pegarLocal()
+            {
+                foreach (HtmlElement tag in navegador4.Document.All)
+                {
+                    if (tag.GetAttribute("classname").Contains("section-name"))
+                    {
+                        localAtual.Text = tag.InnerText;
+                    }
+                }
+                return "";
+            }
+
+            public string pegarHora()
+            {
+                horaAtual.Text = DateTime.Now.ToString();
+                return "";
+            }
+    
+        }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace WindowsFormsAppClima
+{
+    public partial class Form2 : Form
+    {
+        public Form2(string l)
+        {
+            Form1 f1 = new Form1();
+            InitializeComponent();
+            webBrowser1.Url = new Uri(l);
+            this.webBrowser1.ScriptErrorsSuppressed = true;
+        }
+        public void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+        }
+    }
+}
