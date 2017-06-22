@@ -1,0 +1,96 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Microsoft.Speech.Recognition;
+using System.Speech.Synthesis;
+
+namespace Clever
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+            public static SpeechRecognitionEngine reconhecimento = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("pt-BR")); //instancia da classe de reconhecimento de voz, especificada em pt-br
+            public static SpeechSynthesizer sp = new SpeechSynthesizer();
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+                reconhecimento.SetInputToDefaultAudioDevice(); //define a saída de audio padrão
+                string[] listaComandos = {"que horas são", "que dia é hoje", "quanto é", "me acorda às",
+                                "me lembra de", "anota aí", "pesquise", "notícias"};
+                Choices comandos = new Choices(listaComandos);
+
+                GrammarBuilder gramatica_dos_comandos = new GrammarBuilder(); //cria uma relação entre o reconhecimento de voz e a gramática (array comandos)
+                gramatica_dos_comandos.Append(comandos); //acrescenta as strings do array comandos à essa relação 
+
+                Grammar pronuncia_dos_comandos = new Grammar(gramatica_dos_comandos); //cria um objeto para diferenciar a pronúncia entre as strings da relação gramatica_dos_comandos e outras relações vindouras
+                pronuncia_dos_comandos.Name = "comandosGerais"; //define o nome do objeto
+
+
+
+                reconhecimento.LoadGrammar(pronuncia_dos_comandos); //engine para reconhecer as palavras e pronúncias e carregar os objetos do tipo Grammar no objeto 
+                reconhecimento.SpeechRecognized += rec; //quando a fala (entrada) for reconhecido
+                reconhecimento.RecognizeAsync(RecognizeMode.Multiple); //para reconhecer vários comandos, e não apenas o primeiro (.Single)
+
+
+        }
+
+
+            private static void rec(object s, SpeechRecognizedEventArgs e) //aqui serão definidos os eventos, ou seja, oque cada comando por voz vai fazer
+                                                                           //é isso oque o SpeechRecognizedEventArgs faz
+            {
+                if (e.Result.Confidence >= 0.4f) //representa a probabilidade de que o reconhecimento corresponda a uma determinada entrada.
+                {
+                    string comando = e.Result.Text; //apresenta em forma de texto o comando dado por voz
+                    string tipoComando = e.Result.Grammar.Name;
+
+                    //talvez a parte principal, um switch-case para os comandos dados
+                    switch (tipoComando)
+                    {
+                        case "comandosGerais":
+                            executarComandosGerais(comando);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    Speak("Não ouvi sua voz claramente"); //frase padrão que o programa vai falar se ele não entender o comando dado (Confidence menor que 0.4)
+                }
+            }
+
+            private static void executarComandosGerais(string pedido)
+            {
+                string[] mes = {"janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"};
+
+                switch (pedido)
+                {
+                    case "que horas são":
+                        Speak(DateTime.Now.ToString("HH" + "e" + "mm"));
+                        break;
+                    case "que dia é hoje":
+                        Speak(DateTime.Now.Day.ToString() + "de" + mes[DateTime.Now.Month - 1]);
+                        break;
+
+                }
+            }
+
+            private static void Speak(string text) //Método da classe Speech.Synthesis que vai converter em fala a string passada
+            {
+                sp.SpeakAsyncCancelAll(); //faz o programa parar de falar
+                sp.SpeakAsync(text);      //e passa a falar a nova frase programada para ser dita dependendo do comando dado
+            }
+            
+        
+    }
+}
