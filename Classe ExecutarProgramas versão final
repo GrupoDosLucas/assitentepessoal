@@ -1,0 +1,120 @@
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Clever2
+{
+    interface Executar
+    {
+        void abrirPrograma();
+        void fecharPrograma();
+    }
+
+    public class TestarConexao
+    {
+        public  bool CheckForInternetConnection()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    using (var stream = client.OpenRead("http://www.google.com"))
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Não há conexão com a internet", "Estamos offline", MessageBoxButtons.OK);
+                return false;
+            }
+        }
+        
+    }
+
+    class ExecutarBlocodeNotas : Executar
+    {
+        public void abrirPrograma()
+        {
+            Process.Start("notepad.exe");
+        }
+
+        public void fecharPrograma()
+        {
+            Process.GetCurrentProcess().Close();
+        }
+    }
+    class ExecutarGoogle : Executar
+    {
+        public void abrirPrograma()
+        {
+            Process.Start("chrome.exe");
+        }
+
+        public void fecharPrograma()
+        {
+            throw new NotImplementedException();
+        }
+    }
+    class ExecutarWord : Executar
+    {
+        public void abrirPrograma()
+        {
+            Process.Start("winword.exe");
+        }
+
+        public void fecharPrograma()
+        {
+            throw new NotImplementedException();
+        }
+    }
+    class ExecutarExcel : Executar
+    {
+        public void abrirPrograma()
+        {
+            Process.Start("excel.exe");
+        }
+
+        public void fecharPrograma()
+        {
+            throw new NotImplementedException();
+        }
+    }
+    class ExecutarPowerPoint : Executar
+    {
+        public void abrirPrograma()
+        {
+            Process.Start("powerpnt.exe");
+        }
+
+        public void fecharPrograma()
+        {
+            throw new NotImplementedException();
+        }
+    }
+    class ExecutarCalculadora : Executar
+    {
+        public void abrirPrograma()
+        {
+            Process.Start("calc.exe");
+        }
+
+        public void fecharPrograma()
+        {
+            throw new NotImplementedException();
+        }
+                    
+    }
+
+
+}
+    
+
+
