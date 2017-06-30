@@ -1,0 +1,67 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.SQLite;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static Clever2.Form2LembreteComDia;
+using static Clever2.FormLembreteSimples;
+
+namespace Clever2
+{
+    public partial class Form4Pendentes : Form
+    {
+        public Form4Pendentes()
+        {
+            InitializeComponent();
+            pegarLembrete();
+        }
+
+        private void Form4Pendentes_Load(object sender, EventArgs e)
+        {
+        }
+
+        void pegarLembrete()
+        {
+            SQLiteConnection con;
+            string path = Environment.GetEnvironmentVariable("homepath") + "\\Desktop\\";
+            con = new SQLiteConnection("Data Source =" + path + "MyDatabase.sqlite;Version=3");
+            con.Open();
+            LembreteDAO dao = new LembreteDAO(con);
+            List<LembreteSimples> lembretes = dao.mostrarPendentes();
+            foreach (var lembrete in lembretes)
+            {
+                string lembranca = lembrete.Lembranca.ToString();
+                string horario = lembrete.Hora.ToString() + ":" + lembrete.Minuto.ToString();
+                dataGridView1.Rows.Add(lembranca, horario);
+                
+                //Console.WriteLine("Você precisa: " + lembrete.Lembranca, "às: " + lembrete.Hora + ":" + lembrete.Minuto);
+                //Console.Read();
+            }
+
+            List<LembreteComDia> lembretes2 = dao.mostrarPendentes2();
+            foreach (var lembrete in lembretes2)
+            {
+
+                string lembranca = lembrete.Lembranca.ToString();
+                string horario = lembrete.Hora.ToString() + ":" + lembrete.Minuto.ToString();
+                string dia = lembrete.Dia.ToString() + "/" + lembrete.Mes.ToString();
+                dataGridView1.Rows.Add(lembranca, horario, dia);
+
+                //Console.WriteLine("Você precisa: " + lembrete.Lembranca, "às: " + lembrete.Hora + ":" + lembrete.Minuto);
+                // Console.Read();
+            }
+            con.Close();
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+           
+        }
+    }
+}
