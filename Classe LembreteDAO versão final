@@ -1,0 +1,111 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SQLite;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static Clever2.Form2LembreteComDia;
+using static Clever2.Form3Acordar;
+using static Clever2.FormLembreteSimples;
+
+namespace Clever2
+{
+   public class LembreteDAO
+    {
+        SQLiteConnection con;
+        public LembreteDAO(SQLiteConnection con)
+        {
+            this.con = con;
+        }
+
+
+        public static void criarTabelaLembreteSimples(SQLiteConnection con)
+        {
+            string sql = "create table if not exists t_LembreteSimples"
+                + "("
+                + "lembranca char(250), "
+                + "hora int, "
+                + "minuto int "
+                + ")";
+            SQLiteCommand command = new SQLiteCommand(sql, con);
+            command.ExecuteNonQuery();
+        }
+
+        public void inserirLembreteSimples(LembreteSimples lembrete)
+        {
+            string sql = "insert into t_LembreteSimples"
+           + "(lembranca, hora, minuto) values ('" + lembrete.Lembranca + "', " + lembrete.Hora
+           + ", " + lembrete.Minuto + ")";
+            SQLiteCommand command = new SQLiteCommand(sql, con);
+            command.ExecuteNonQuery();
+        }
+
+
+
+        public static void criarLembreteComDia(SQLiteConnection con)
+        {
+            string sql = "create table if not exists t_LembreteComDia" +
+                "(" +
+                "lembranca char(250), " +
+                "dia int, " +
+                "mes int, " +
+                "hora int, " +
+                "minuto int" +
+                ")";
+            SQLiteCommand command = new SQLiteCommand(sql, con);
+            command.ExecuteNonQuery();
+        }
+
+        public void inserirLembreteComDia(LembreteComDia lembrete)
+        {
+            string sql = "insert into t_LembreteComDia" +
+       "(lembranca, dia, mes, hora, minuto) values ('" + lembrete.Lembranca + "', " +
+        lembrete.Dia + ", " + lembrete.Mes + ", " + lembrete.Hora + ", " + lembrete.Minuto + ")";
+            SQLiteCommand command = new SQLiteCommand(sql, con);
+            command.ExecuteNonQuery();
+        }
+
+       
+
+        public List<LembreteSimples> mostrarPendentes()
+        {
+            string horaAtual = DateTime.Now.ToString("HH");
+            string minutoAtual = DateTime.Now.ToString("mm");
+
+            List<LembreteSimples> lembretes = new List<LembreteSimples>();
+            string sql = "select * from t_LembreteSimples where hora >= "
+                + horaAtual;
+
+            SQLiteCommand command = new SQLiteCommand(sql, con);
+            SQLiteDataReader r = command.ExecuteReader();
+            while (r.Read())
+            {
+                LembreteSimples lembrete = new LembreteSimples((string)r["lembranca"],
+                    (int)r["hora"], (int)r["minuto"]);
+                lembretes.Add(lembrete);
+            }
+            return lembretes;
+        }
+        public List<LembreteComDia> mostrarPendentes2()
+        {
+            string horaAtual = DateTime.Now.ToString("HH");
+            string minutoAtual = DateTime.Now.ToString("mm");
+            string diaAtual = DateTime.Now.Day.ToString();
+            string mesAtual = DateTime.Now.Month.ToString();
+
+            List<LembreteComDia> lembretes = new List<LembreteComDia>();
+            string sql = "select * from t_LembreteComDia";
+
+            SQLiteCommand command = new SQLiteCommand(sql, con);
+            SQLiteDataReader r = command.ExecuteReader();
+            while (r.Read())
+            {
+                LembreteComDia lembrete = new LembreteComDia((string)r["lembranca"],
+                    (int)r["dia"], (int)r["mes"], (int)r["hora"], (int)r["minuto"]);
+                lembretes.Add(lembrete);
+            }
+            return lembretes;
+        }
+
+    }
+}
