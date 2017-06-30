@@ -1,0 +1,48 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Clever2
+{
+    public partial class FormClima : Form
+    {
+        WebBrowser navegador;
+        public FormClima()
+        {
+            InitializeComponent();
+            //navegador.Navigate(textBox1.Text);
+            navegador = new WebBrowser();
+
+
+        }
+
+        public void setText(string text)
+        {
+            textBox1.Text = text;
+        }
+
+        
+        
+
+        private void FormClima_Load(object sender, EventArgs e)
+        {
+            navegador.ScriptErrorsSuppressed = true;
+            navegador.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(this.dados_carregados);
+        }
+        private void dados_carregados(object sender, EventArgs e)
+        {
+            label1.Text = navegador.Document.GetElementById("wob_tm").InnerText + "°C"; //pega a temperatura
+            dia.Text = navegador.Document.GetElementById("wob_dts").InnerText;
+            umidade.Text = "Umidade: " + navegador.Document.GetElementById("wob_hm").InnerText;
+            chuva.Text = "Chuva: " + navegador.Document.GetElementById("wob_pp").InnerText;
+            vento.Text = "Vento: " + navegador.Document.GetElementById("wob_ws").InnerText;
+            local.Text = navegador.Document.GetElementById("wob_loc").InnerText;            
+        }
+    }
+}
