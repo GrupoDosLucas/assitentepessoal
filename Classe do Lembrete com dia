@@ -1,0 +1,83 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.SQLite;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Clever2
+{
+    public partial class Form2LembreteComDia : Form
+    {
+        public Form2LembreteComDia()
+        {
+            InitializeComponent();
+        }
+
+        private void Form2LembreteComDia_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        public class LembreteComDia
+        {
+            private string lembranca;
+            private int dia;
+            private int mes;
+            private int hora;
+            private int minuto;
+
+            public LembreteComDia(string lembranca, int dia, int mes, int hora, int minuto)
+            {
+                this.Lembranca = lembranca;
+                this.Dia = dia;
+                this.Mes = mes;
+                this.Hora = hora;
+                this.Minuto = minuto;
+            }
+
+            public string Lembranca { get => lembranca; set => lembranca = value; }
+            public int Dia { get => dia; set => dia = value; }
+            public int Mes { get => mes; set => mes = value; }
+            public int Hora { get => hora; set => hora = value; }
+            public int Minuto { get => minuto; set => minuto = value; }
+        }
+
+        
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            SQLiteConnection con;
+            string path = Environment.GetEnvironmentVariable("homepath") + "\\Desktop\\";
+            con = new SQLiteConnection("Data Source =" + path + "MyDatabase.sqlite;Version=3");
+            con.Open();
+            LembreteDAO.criarLembreteComDia(con);
+            try
+            {
+                LembreteDAO dao = new LembreteDAO(con);
+                LembreteComDia l = new LembreteComDia(textBox1.Text.ToString(), Int32.Parse(textBox2.Text), Int32.Parse(textBox3.Text), Int32.Parse(textBox4.Text), Int32.Parse(textBox5.Text));
+                dao.inserirLembreteComDia(l);
+            }
+            catch (Exception)
+            {
+                errorProvider1.SetError(button1, "Insira valores válidos. Ex: \r\n Lembrar de:" +
+                  "\r\n > Fazer algo" +
+                  "\r\n Dia:" +
+                  "\r\n > 01 | 01" +
+                  "\r\n Às:" +
+                  "\r\n > 12 : 30");
+            }
+            con.Close();
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+    }
+}
