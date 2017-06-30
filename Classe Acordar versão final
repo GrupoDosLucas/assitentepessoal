@@ -1,0 +1,124 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.SQLite;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Speech.Synthesis;
+using System.Threading;
+
+namespace Clever2
+{
+    public partial class Form3Acordar : Form
+    {
+        System.Timers.Timer timer;
+
+        public Form3Acordar()
+        {
+            InitializeComponent();
+            sp.SelectVoice(Name = "IVONA 2 Ricardo");
+            label4.Text = "desligado";
+        }
+
+        public static SpeechSynthesizer sp = new SpeechSynthesizer();
+
+        private void Form3Acordar_Load(object sender, EventArgs e)
+        {
+            timer = new System.Timers.Timer();
+            timer.Interval = 1000;
+            timer.Elapsed += Timer_Elapsed;
+        }
+
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                DateTime horaAtual = DateTime.Now;
+                int horaConfigurada = Int32.Parse(textBox1.Text);
+                int minutoConfigurado = Int32.Parse(textBox2.Text);
+                string frase;
+
+                if (horaAtual.Hour == horaConfigurada && horaAtual.Minute == minutoConfigurado)
+                {
+                    timer.Stop();
+                    if (horaConfigurada == 1)
+                    {
+                        if (minutoConfigurado == 01)
+                        {
+                            frase = "Bom dia, agora são " + DateTime.Now.Hour + "hora e " + DateTime.Now.Minute + "minuto";
+                        }
+                        else
+                        {
+                            if (minutoConfigurado == 0)
+                            {
+                                frase = "Bom dia, agora são " + DateTime.Now.Hour + "hora";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (minutoConfigurado == 01)
+                        {
+                            frase = "Bom dia, agora são " + DateTime.Now.Hour + "horas e " + DateTime.Now.Minute + "minuto";
+                        }
+                        else
+                        {
+                            if (minutoConfigurado == 0)
+                            {
+                                frase = "Bom dia, agora são " + DateTime.Now.Hour + "horas";
+                            }
+                            else
+                            {
+                                frase = "Bom dia, agora são " + DateTime.Now.Hour + "horas e " + DateTime.Now.Minute + "minutos";
+                            }
+                        }
+                        
+                        Speak(frase);
+                        
+                    }
+                    
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                label4.Text = "ligado";
+                timer.Start();
+                textBox1.ReadOnly = true;
+                textBox2.ReadOnly = true;
+
+            }
+            catch (Exception)
+            {
+                errorProvider1.SetError(button1, "Insira valores válidos. Ex: \r\n" +
+                 "Programe para acordar às:" +
+                 "\r\n 12 h 30");
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            label4.Text = "desligado";
+            timer.Stop();
+            textBox1.ReadOnly = false;
+            textBox2.ReadOnly = false;
+        }
+
+        private static void Speak(string text) 
+        {
+            sp.SpeakAsyncCancelAll(); 
+            sp.SpeakAsync(text);
+        }
+    }
+}
