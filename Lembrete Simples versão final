@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SQLite;
+
+namespace Clever2
+{
+    public partial class FormLembreteSimples : Form
+    {
+        public FormLembreteSimples()
+        {
+            InitializeComponent();
+        }
+
+        private void FormLembreteSimples_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        public class LembreteSimples
+        {
+            private string lembranca;
+            private int hora;
+            private int minuto;
+
+            public LembreteSimples(string lembranca, int hora, int minuto)
+            {
+                this.lembranca = lembranca;
+                this.hora = hora;
+                this.minuto = minuto;
+            }
+
+            public string Lembranca { get => lembranca; set => lembranca = value; }
+            public int Hora { get => hora; set => hora = value; }
+            public int Minuto { get => minuto; set => minuto = value; }
+
+        }
+
+        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SQLiteConnection con;
+            string path = Environment.GetEnvironmentVariable("homepath") + "\\Desktop\\";
+            con = new SQLiteConnection("Data Source =" + path + "MyDatabase.sqlite;Version=3");
+            con.Open();
+            LembreteDAO.criarTabelaLembreteSimples(con);
+            try
+            {
+                LembreteDAO dao = new LembreteDAO(con);
+                LembreteSimples l = new LembreteSimples(textBox1.Text.ToString(), Int32.Parse(textBox2.Text), Int32.Parse(textBox3.Text));
+                dao.inserirLembreteSimples(l);
+            }
+            catch (Exception)
+            {
+                errorProvider1.SetError(button1, "Insira valores válidos. Ex: \r\n Lembrar de:" +
+                    "\r\n > Fazer algo" +
+                    "\r\n Às:" +
+                    "\r\n > 12 : 30");
+            }
+            con.Close();
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
+}
